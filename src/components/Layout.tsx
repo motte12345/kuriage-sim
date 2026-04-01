@@ -7,7 +7,7 @@ export function Layout() {
 
   // Close drawer on route change
   useEffect(() => {
-    setMenuOpen(false)
+    setMenuOpen(false) // eslint-disable-line react-hooks/set-state-in-effect
   }, [location.pathname])
 
   // Prevent body scroll when drawer is open

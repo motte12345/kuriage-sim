@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Seo } from '../components/Seo'
+import { FormError } from '../components/FormError'
 import { RelatedTools } from '../components/RelatedTools'
 import { HikakuSeoContent } from '../components/SeoContent'
 import type { RepaymentMethod } from '../types/loan'
@@ -37,10 +38,12 @@ function LoanForm({
   loan,
   onChange,
   colorLabel,
+  radioName,
 }: {
   readonly loan: LoanInput
   readonly onChange: (field: keyof LoanInput, value: string) => void
   readonly colorLabel: string
+  readonly radioName: string
 }) {
   return (
     <div className="card">
@@ -92,6 +95,7 @@ function LoanForm({
           <label className="form-radio-label">
             <input
               type="radio"
+              name={radioName}
               checked={loan.method === 'equal_payment'}
               onChange={() => onChange('method', 'equal_payment')}
             />
@@ -100,6 +104,7 @@ function LoanForm({
           <label className="form-radio-label">
             <input
               type="radio"
+              name={radioName}
               checked={loan.method === 'equal_principal'}
               onChange={() => onChange('method', 'equal_principal')}
             />
@@ -118,11 +123,22 @@ export function HikakuPage() {
     a: LoanSimulationResult
     b: LoanSimulationResult
   } | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const updateA = (field: keyof LoanInput, value: string) =>
     setLoanA({ ...loanA, [field]: value })
   const updateB = (field: keyof LoanInput, value: string) =>
     setLoanB({ ...loanB, [field]: value })
+
+  const validateLoan = (loan: LoanInput, label: string): string | null => {
+    const p = parseFloat(loan.principal)
+    const r = parseFloat(loan.rate)
+    const y = parseInt(loan.years)
+    if (isNaN(p) || p <= 0) return `${label}の借入額を1万円以上で入力してください。`
+    if (isNaN(r) || r < 0) return `${label}の年利を0%以上で入力してください。`
+    if (isNaN(y) || y <= 0) return `${label}の返済期間を1年以上で入力してください。`
+    return null
+  }
 
   const calc = (loan: LoanInput) =>
     simulateLoan({
@@ -134,11 +150,12 @@ export function HikakuPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    try {
-      setResult({ a: calc(loanA), b: calc(loanB) })
-    } catch {
-      // validation error
-    }
+    setError(null)
+    const errA = validateLoan(loanA, 'ローンA')
+    if (errA) { setError(errA); return }
+    const errB = validateLoan(loanB, 'ローンB')
+    if (errB) { setError(errB); return }
+    setResult({ a: calc(loanA), b: calc(loanB) })
   }
 
   return (
@@ -156,9 +173,10 @@ export function HikakuPage() {
 
       <form onSubmit={handleSubmit} style={{ marginBottom: '1.5rem' }}>
         <div className="loan-form-grid">
-          <LoanForm loan={loanA} onChange={updateA} colorLabel="ローンA" />
-          <LoanForm loan={loanB} onChange={updateB} colorLabel="ローンB" />
+          <LoanForm loan={loanA} onChange={updateA} colorLabel="ローンA" radioName="methodA" />
+          <LoanForm loan={loanB} onChange={updateB} colorLabel="ローンB" radioName="methodB" />
         </div>
+        <FormError message={error} />
         <button type="submit" className="btn btn-primary btn-block">
           比較する
         </button>
