@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 
 /**
  * localStorageに値を保持するuseState。
@@ -10,7 +10,7 @@ export function usePersistedState<T>(
 ): [T, (value: T | ((prev: T) => T)) => void] {
   const storageKey = `kuriage-sim:${key}`
 
-  const [state, setStateRaw] = useState<T>(() => {
+  const [state, setState] = useState<T>(() => {
     try {
       const stored = localStorage.getItem(storageKey)
       if (stored !== null) {
@@ -22,22 +22,27 @@ export function usePersistedState<T>(
     return defaultValue
   })
 
-  const setState = useCallback(
+  // stateが変わるたびにlocalStorageへ書き込み
+  const isFirstRender = useRef(true)
+  useEffect(() => {
+    // 初回レンダリング時はスキップ（読み出した値をそのまま書き戻すのを防ぐ）
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(state))
+    } catch {
+      // quota exceeded or unavailable
+    }
+  }, [state, storageKey])
+
+  const setPersistedState = useCallback(
     (value: T | ((prev: T) => T)) => {
-      setStateRaw((prev) => {
-        const next = typeof value === 'function'
-          ? (value as (prev: T) => T)(prev)
-          : value
-        try {
-          localStorage.setItem(storageKey, JSON.stringify(next))
-        } catch {
-          // quota exceeded or unavailable
-        }
-        return next
-      })
+      setState(value)
     },
-    [storageKey],
+    [],
   )
 
-  return [state, setState]
+  return [state, setPersistedState]
 }

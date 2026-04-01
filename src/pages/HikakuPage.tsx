@@ -127,9 +127,9 @@ export function HikakuPage() {
   const [error, setError] = useState<string | null>(null)
 
   const updateA = (field: keyof LoanInput, value: string) =>
-    setLoanA({ ...loanA, [field]: value })
+    setLoanA((prev) => ({ ...prev, [field]: value }))
   const updateB = (field: keyof LoanInput, value: string) =>
-    setLoanB({ ...loanB, [field]: value })
+    setLoanB((prev) => ({ ...prev, [field]: value }))
 
   const validateLoan = (loan: LoanInput, label: string): string | null => {
     const p = parseFloat(loan.principal)

@@ -38,7 +38,7 @@ export function KuriagePage() {
   const [error, setError] = useState<string | null>(null)
 
   const update = (field: keyof FormState, value: string) =>
-    setForm({ ...form, [field]: value })
+    setForm((prev) => ({ ...prev, [field]: value }))
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
