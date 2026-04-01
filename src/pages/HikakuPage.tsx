@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Seo } from '../components/Seo'
 import { RelatedTools } from '../components/RelatedTools'
+import { HikakuSeoContent } from '../components/SeoContent'
 import type { RepaymentMethod } from '../types/loan'
 import { simulateLoan } from '../calc/loan'
 import type { LoanSimulationResult } from '../types/loan'
@@ -271,6 +272,8 @@ export function HikakuPage() {
           />
         </div>
       )}
+
+      <HikakuSeoContent />
     </>
   )
 }

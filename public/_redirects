@@ -1,1 +1,9 @@
+# Trailing slash normalization
+/kuriage/ /kuriage 301
+/kuriage-multi/ /kuriage-multi 301
+/karikae/ /karikae 301
+/hikaku/ /hikaku 301
+/about/ /about 301
+
+# SPA fallback (routes not matched above)
 /* /index.html 200

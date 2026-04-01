@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Seo } from '../components/Seo'
 import { FormError } from '../components/FormError'
 import { RelatedTools } from '../components/RelatedTools'
+import { KuriageSeoContent } from '../components/SeoContent'
 import type { RepaymentMethod } from '../types/loan'
 import { comparePrepayment } from '../calc/loan'
 import { formatYen, formatMan, formatMonths } from '../calc/format'
@@ -83,7 +84,7 @@ export function KuriagePage() {
   return (
     <>
       <Seo
-        title="繰上返済シミュレーター"
+        title="繰上返済の利息削減シミュレーション"
         description="住宅ローンの繰上返済で利息をいくら減らせるか計算。期間短縮型と返済額軽減型を並べて比較し、返済スケジュールとグラフで確認できます。"
         path="/kuriage"
       />
@@ -305,6 +306,8 @@ export function KuriagePage() {
           />
         </div>
       )}
+
+      <KuriageSeoContent />
     </>
   )
 }
