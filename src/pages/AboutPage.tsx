@@ -54,6 +54,16 @@ export function AboutPage() {
           </li>
         </ul>
       </div>
+
+      <div className="card" style={{ marginTop: '1.25rem' }}>
+        <h2 className="section-title">お問い合わせ</h2>
+        <p style={{ color: 'var(--color-text-secondary)' }}>
+          ご意見・ご要望・不具合のご報告は下記メールアドレスまでお願いいたします。
+        </p>
+        <p style={{ marginTop: '0.5rem' }}>
+          <a href="mailto:tm.qp.sites@gmail.com">tm.qp.sites@gmail.com</a>
+        </p>
+      </div>
     </>
   )
 }
