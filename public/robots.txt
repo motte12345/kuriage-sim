@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kuriage-sim.pages.dev/sitemap.xml
