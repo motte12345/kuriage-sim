@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { usePersistedState } from '../hooks/usePersistedState'
 import { Seo } from '../components/Seo'
 import { FormError } from '../components/FormError'
 import { RelatedTools } from '../components/RelatedTools'
@@ -30,7 +31,7 @@ const defaultForm: FormState = {
 }
 
 export function KuriagePage() {
-  const [form, setForm] = useState(defaultForm)
+  const [form, setForm] = usePersistedState('kuriage-form', defaultForm)
   const [result, setResult] = useState<ReturnType<
     typeof comparePrepayment
   > | null>(null)

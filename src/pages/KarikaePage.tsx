@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { usePersistedState } from '../hooks/usePersistedState'
 import { Seo } from '../components/Seo'
 import { FormError } from '../components/FormError'
 import { RelatedTools } from '../components/RelatedTools'
@@ -12,12 +13,12 @@ import { BalanceChart } from '../components/LoanChart'
 import { ScheduleTable } from '../components/ScheduleTable'
 
 export function KarikaePage() {
-  const [balance, setBalance] = useState('2500')
-  const [remainingYears, setRemainingYears] = useState('25')
-  const [currentRate, setCurrentRate] = useState('2.0')
-  const [newRate, setNewRate] = useState('1.0')
-  const [cost, setCost] = useState('50')
-  const [method, setMethod] = useState<RepaymentMethod>('equal_payment')
+  const [balance, setBalance] = usePersistedState('karikae-balance', '2500')
+  const [remainingYears, setRemainingYears] = usePersistedState('karikae-years', '25')
+  const [currentRate, setCurrentRate] = usePersistedState('karikae-current-rate', '2.0')
+  const [newRate, setNewRate] = usePersistedState('karikae-new-rate', '1.0')
+  const [cost, setCost] = usePersistedState('karikae-cost', '50')
+  const [method, setMethod] = usePersistedState<RepaymentMethod>('karikae-method', 'equal_payment')
   const [result, setResult] = useState<ReturnType<typeof simulateRefinance> | null>(null)
   const [error, setError] = useState<string | null>(null)
 

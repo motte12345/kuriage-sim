@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { usePersistedState } from '../hooks/usePersistedState'
 import { Seo } from '../components/Seo'
 import { FormError } from '../components/FormError'
 import { RelatedTools } from '../components/RelatedTools'
@@ -117,8 +118,8 @@ function LoanForm({
 }
 
 export function HikakuPage() {
-  const [loanA, setLoanA] = useState(defaultA)
-  const [loanB, setLoanB] = useState(defaultB)
+  const [loanA, setLoanA] = usePersistedState('hikaku-loanA', defaultA)
+  const [loanB, setLoanB] = usePersistedState('hikaku-loanB', defaultB)
   const [result, setResult] = useState<{
     a: LoanSimulationResult
     b: LoanSimulationResult

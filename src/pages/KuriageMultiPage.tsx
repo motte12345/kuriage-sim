@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { usePersistedState } from '../hooks/usePersistedState'
 import { Seo } from '../components/Seo'
 import { FormError } from '../components/FormError'
 import { RelatedTools } from '../components/RelatedTools'
@@ -21,11 +22,11 @@ interface PrepaymentInput {
 let nextId = 1
 
 export function KuriageMultiPage() {
-  const [principal, setPrincipal] = useState('3000')
-  const [rate, setRate] = useState('1.5')
-  const [years, setYears] = useState('35')
-  const [method, setMethod] = useState<RepaymentMethod>('equal_payment')
-  const [prepayments, setPrepayments] = useState<readonly PrepaymentInput[]>([
+  const [principal, setPrincipal] = usePersistedState('multi-principal', '3000')
+  const [rate, setRate] = usePersistedState('multi-rate', '1.5')
+  const [years, setYears] = usePersistedState('multi-years', '35')
+  const [method, setMethod] = usePersistedState<RepaymentMethod>('multi-method', 'equal_payment')
+  const [prepayments, setPrepayments] = usePersistedState<readonly PrepaymentInput[]>('multi-prepayments', [
     { id: nextId++, year: '3', amount: '100', type: 'shorten_period' },
     { id: nextId++, year: '7', amount: '200', type: 'shorten_period' },
   ])
