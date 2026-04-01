@@ -3,6 +3,7 @@ import { Seo } from '../components/Seo'
 import { FormError } from '../components/FormError'
 import { RelatedTools } from '../components/RelatedTools'
 import { KuriageSeoContent } from '../components/SeoContent'
+import { KuriageAffiliate } from '../components/AffiliateSection'
 import type { RepaymentMethod, Prepayment, PrepaymentType } from '../types/loan'
 import { simulateMultiplePrepayments, simulateLoan } from '../calc/loan'
 import { formatYen, formatMan, formatMonths } from '../calc/format'
@@ -325,6 +326,8 @@ export function KuriageMultiPage() {
           />
         </div>
       )}
+
+      {result && <KuriageAffiliate />}
 
       <KuriageSeoContent />
     </>

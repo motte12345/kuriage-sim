@@ -3,6 +3,7 @@ import { Seo } from '../components/Seo'
 import { FormError } from '../components/FormError'
 import { RelatedTools } from '../components/RelatedTools'
 import { KarikaeSeoContent } from '../components/SeoContent'
+import { KarikaeAffiliate } from '../components/AffiliateSection'
 import type { RepaymentMethod } from '../types/loan'
 import { simulateRefinance } from '../calc/loan'
 import { formatYen, formatMan, formatMonths } from '../calc/format'
@@ -299,6 +300,8 @@ export function KarikaePage() {
           />
         </div>
       )}
+
+      {result && <KarikaeAffiliate />}
 
       <KarikaeSeoContent />
     </>

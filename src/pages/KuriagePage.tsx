@@ -3,6 +3,7 @@ import { Seo } from '../components/Seo'
 import { FormError } from '../components/FormError'
 import { RelatedTools } from '../components/RelatedTools'
 import { KuriageSeoContent } from '../components/SeoContent'
+import { KuriageAffiliate } from '../components/AffiliateSection'
 import type { RepaymentMethod } from '../types/loan'
 import { comparePrepayment } from '../calc/loan'
 import { formatYen, formatMan, formatMonths } from '../calc/format'
@@ -306,6 +307,8 @@ export function KuriagePage() {
           />
         </div>
       )}
+
+      {result && <KuriageAffiliate />}
 
       <KuriageSeoContent />
     </>
