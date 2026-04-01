@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Seo } from '../components/Seo'
+import { RelatedTools } from '../components/RelatedTools'
 import type { RepaymentMethod } from '../types/loan'
 import { simulateLoan } from '../calc/loan'
 import type { LoanSimulationResult } from '../types/loan'
@@ -34,33 +35,73 @@ const defaultB: LoanInput = {
 function LoanForm({
   loan,
   onChange,
+  colorLabel,
 }: {
   readonly loan: LoanInput
   readonly onChange: (field: keyof LoanInput, value: string) => void
+  readonly colorLabel: string
 }) {
   return (
-    <div>
+    <div className="card">
+      <div className="loan-form-card-label">{colorLabel}</div>
       <div className="form-group">
-        <label className="form-label">借入額 <span className="form-hint">（万円）</span></label>
-        <input type="number" className="form-input" value={loan.principal} onChange={(e) => onChange('principal', e.target.value)} min="1" />
+        <label className="form-label">借入額</label>
+        <div className="input-wrapper">
+          <input
+            type="number"
+            className="form-input"
+            value={loan.principal}
+            onChange={(e) => onChange('principal', e.target.value)}
+            min="1"
+          />
+          <span className="input-suffix">万円</span>
+        </div>
       </div>
       <div className="form-group">
-        <label className="form-label">年利 <span className="form-hint">（%）</span></label>
-        <input type="number" className="form-input" value={loan.rate} onChange={(e) => onChange('rate', e.target.value)} min="0" step="0.01" />
+        <label className="form-label">年利</label>
+        <div className="input-wrapper">
+          <input
+            type="number"
+            className="form-input"
+            value={loan.rate}
+            onChange={(e) => onChange('rate', e.target.value)}
+            min="0"
+            step="0.01"
+          />
+          <span className="input-suffix">%</span>
+        </div>
       </div>
       <div className="form-group">
-        <label className="form-label">返済期間 <span className="form-hint">（年）</span></label>
-        <input type="number" className="form-input" value={loan.years} onChange={(e) => onChange('years', e.target.value)} min="1" max="50" />
+        <label className="form-label">返済期間</label>
+        <div className="input-wrapper">
+          <input
+            type="number"
+            className="form-input"
+            value={loan.years}
+            onChange={(e) => onChange('years', e.target.value)}
+            min="1"
+            max="50"
+          />
+          <span className="input-suffix">年</span>
+        </div>
       </div>
       <div className="form-group">
         <label className="form-label">返済方式</label>
         <div className="form-radio-group">
           <label className="form-radio-label">
-            <input type="radio" checked={loan.method === 'equal_payment'} onChange={() => onChange('method', 'equal_payment')} />
+            <input
+              type="radio"
+              checked={loan.method === 'equal_payment'}
+              onChange={() => onChange('method', 'equal_payment')}
+            />
             元利均等
           </label>
           <label className="form-radio-label">
-            <input type="radio" checked={loan.method === 'equal_principal'} onChange={() => onChange('method', 'equal_principal')} />
+            <input
+              type="radio"
+              checked={loan.method === 'equal_principal'}
+              onChange={() => onChange('method', 'equal_principal')}
+            />
             元金均等
           </label>
         </div>
@@ -72,10 +113,15 @@ function LoanForm({
 export function HikakuPage() {
   const [loanA, setLoanA] = useState(defaultA)
   const [loanB, setLoanB] = useState(defaultB)
-  const [result, setResult] = useState<{ a: LoanSimulationResult; b: LoanSimulationResult } | null>(null)
+  const [result, setResult] = useState<{
+    a: LoanSimulationResult
+    b: LoanSimulationResult
+  } | null>(null)
 
-  const updateA = (field: keyof LoanInput, value: string) => setLoanA({ ...loanA, [field]: value })
-  const updateB = (field: keyof LoanInput, value: string) => setLoanB({ ...loanB, [field]: value })
+  const updateA = (field: keyof LoanInput, value: string) =>
+    setLoanA({ ...loanA, [field]: value })
+  const updateB = (field: keyof LoanInput, value: string) =>
+    setLoanB({ ...loanB, [field]: value })
 
   const calc = (loan: LoanInput) =>
     simulateLoan({
@@ -101,28 +147,44 @@ export function HikakuPage() {
         description="2つのローン条件を横並びで比較。月額返済額・総支払額・利息総額の違いを一目で確認。固定金利vs変動金利の検討にも。"
         path="/hikaku"
       />
-      <h1 className="section-title">ローン比較ツール</h1>
-      <p style={{ marginBottom: '1.5rem', color: 'var(--color-text-secondary)' }}>
+
+      <h1 className="page-title">ローン比較ツール</h1>
+      <p className="page-description">
         2つのローン条件を並べて比較します。固定金利 vs 変動金利（想定金利）の検討にも使えます。
       </p>
 
-      <form onSubmit={handleSubmit} style={{ marginBottom: '2rem' }}>
-        <div className="result-grid">
-          <div className="card">
-            <h2 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '1rem' }}>ローンA</h2>
-            <LoanForm loan={loanA} onChange={updateA} />
-          </div>
-          <div className="card">
-            <h2 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '1rem' }}>ローンB</h2>
-            <LoanForm loan={loanB} onChange={updateB} />
-          </div>
+      <form onSubmit={handleSubmit} style={{ marginBottom: '1.5rem' }}>
+        <div className="loan-form-grid">
+          <LoanForm loan={loanA} onChange={updateA} colorLabel="ローンA" />
+          <LoanForm loan={loanB} onChange={updateB} colorLabel="ローンB" />
         </div>
-        <button type="submit" className="btn btn-primary btn-block">比較する</button>
+        <button type="submit" className="btn btn-primary btn-block">
+          比較する
+        </button>
       </form>
 
       {result && (
         <div>
-          <div className="card">
+          {result.a.totalInterest !== result.b.totalInterest && (
+            <div className="result-banner">
+              <div className="result-banner-item">
+                <div className="banner-label">利息の差額</div>
+                <div className="banner-value">
+                  {formatYen(Math.abs(result.a.totalInterest - result.b.totalInterest))}
+                  <span className="banner-unit">円</span>
+                </div>
+              </div>
+              <div className="result-banner-divider" />
+              <div className="result-banner-item">
+                <div className="banner-label">有利なローン</div>
+                <div className="banner-value">
+                  {result.a.totalInterest < result.b.totalInterest ? 'ローンA' : 'ローンB'}
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="card section-gap">
             <h2 className="section-title">比較結果</h2>
             <table className="comparison-table">
               <thead>
@@ -135,8 +197,12 @@ export function HikakuPage() {
               <tbody>
                 <tr>
                   <td>月額返済額</td>
-                  <td className={result.a.monthlyPayment <= result.b.monthlyPayment ? 'best' : ''}>{formatYen(result.a.monthlyPayment)}円</td>
-                  <td className={result.b.monthlyPayment <= result.a.monthlyPayment ? 'best' : ''}>{formatYen(result.b.monthlyPayment)}円</td>
+                  <td className={result.a.monthlyPayment <= result.b.monthlyPayment ? 'best' : ''}>
+                    {formatYen(result.a.monthlyPayment)}円
+                  </td>
+                  <td className={result.b.monthlyPayment <= result.a.monthlyPayment ? 'best' : ''}>
+                    {formatYen(result.b.monthlyPayment)}円
+                  </td>
                 </tr>
                 <tr>
                   <td>返済期間</td>
@@ -145,13 +211,21 @@ export function HikakuPage() {
                 </tr>
                 <tr>
                   <td>総支払額</td>
-                  <td className={result.a.totalPayment <= result.b.totalPayment ? 'best' : ''}>{formatYen(result.a.totalPayment)}円</td>
-                  <td className={result.b.totalPayment <= result.a.totalPayment ? 'best' : ''}>{formatYen(result.b.totalPayment)}円</td>
+                  <td className={result.a.totalPayment <= result.b.totalPayment ? 'best' : ''}>
+                    {formatYen(result.a.totalPayment)}円
+                  </td>
+                  <td className={result.b.totalPayment <= result.a.totalPayment ? 'best' : ''}>
+                    {formatYen(result.b.totalPayment)}円
+                  </td>
                 </tr>
                 <tr>
                   <td>利息総額</td>
-                  <td className={result.a.totalInterest <= result.b.totalInterest ? 'best' : ''}>{formatYen(result.a.totalInterest)}円</td>
-                  <td className={result.b.totalInterest <= result.a.totalInterest ? 'best' : ''}>{formatYen(result.b.totalInterest)}円</td>
+                  <td className={result.a.totalInterest <= result.b.totalInterest ? 'best' : ''}>
+                    {formatYen(result.a.totalInterest)}円
+                  </td>
+                  <td className={result.b.totalInterest <= result.a.totalInterest ? 'best' : ''}>
+                    {formatYen(result.b.totalInterest)}円
+                  </td>
                 </tr>
                 <tr>
                   <td>利息の差額</td>
@@ -180,6 +254,21 @@ export function HikakuPage() {
             <ScheduleTable schedule={result.a.schedule} label="ローンA・返済スケジュール" />
             <ScheduleTable schedule={result.b.schedule} label="ローンB・返済スケジュール" />
           </div>
+
+          <RelatedTools
+            tools={[
+              {
+                to: '/kuriage',
+                label: '繰上返済シミュレーター',
+                description: '決めたローンで繰上返済の効果を試してみましょう',
+              },
+              {
+                to: '/karikae',
+                label: '借り換えシミュレーター',
+                description: '既存ローンからの借り換えを検討している方に',
+              },
+            ]}
+          />
         </div>
       )}
     </>

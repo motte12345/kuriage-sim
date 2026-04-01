@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Seo } from '../components/Seo'
+import { FormError } from '../components/FormError'
+import { RelatedTools } from '../components/RelatedTools'
 import type { RepaymentMethod, Prepayment, PrepaymentType } from '../types/loan'
 import { simulateMultiplePrepayments, simulateLoan } from '../calc/loan'
 import { formatYen, formatMan, formatMonths } from '../calc/format'
@@ -30,6 +32,7 @@ export function KuriageMultiPage() {
     readonly withoutPrepayment: ReturnType<typeof simulateLoan>
     readonly savedInterest: number
   } | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const addPrepayment = () =>
     setPrepayments([
@@ -51,11 +54,14 @@ export function KuriageMultiPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setError(null)
     const p = parseFloat(principal) * 10_000
     const r = parseFloat(rate) / 100
     const m = parseInt(years) * 12
 
-    if (isNaN(p) || isNaN(r) || isNaN(m) || p <= 0 || r < 0 || m <= 0) return
+    if (isNaN(p) || p <= 0) { setError('借入額を1万円以上で入力してください。'); return }
+    if (isNaN(r) || r < 0) { setError('年利を0%以上で入力してください。'); return }
+    if (isNaN(m) || m <= 0) { setError('返済期間を1年以上で入力してください。'); return }
 
     const pps: Prepayment[] = prepayments
       .filter((pp) => pp.year && pp.amount)
@@ -72,7 +78,7 @@ export function KuriageMultiPage() {
           pp.amount > 0,
       )
 
-    if (pps.length === 0) return
+    if (pps.length === 0) { setError('繰上返済を1件以上設定してください。'); return }
 
     const res = simulateMultiplePrepayments(
       { principal: p, annualRate: r, totalMonths: m, method },
@@ -88,90 +94,178 @@ export function KuriageMultiPage() {
         description="複数回の繰上返済をまとめてシミュレーション。3年後に100万、7年後に200万など、計画的な繰上返済の効果を確認できます。"
         path="/kuriage-multi"
       />
-      <h1 className="section-title">複数回繰上返済シミュレーション</h1>
-      <p style={{ marginBottom: '1.5rem', color: 'var(--color-text-secondary)' }}>
+
+      <h1 className="page-title">複数回繰上返済シミュレーション</h1>
+      <p className="page-description">
         「3年後に100万、7年後に200万」のように複数回の繰上返済をまとめてシミュレーションできます。
       </p>
 
-      <form onSubmit={handleSubmit} className="card" style={{ marginBottom: '2rem' }}>
+      <form onSubmit={handleSubmit} className="card" style={{ marginBottom: '1.5rem' }}>
+        <p className="form-section-label">ローン情報</p>
+
         <div className="form-row">
           <div className="form-group">
-            <label className="form-label">借入額 <span className="form-hint">（万円）</span></label>
-            <input type="number" className="form-input" value={principal} onChange={(e) => setPrincipal(e.target.value)} min="1" />
+            <label className="form-label">借入額</label>
+            <div className="input-wrapper">
+              <input
+                type="number"
+                className="form-input"
+                value={principal}
+                onChange={(e) => setPrincipal(e.target.value)}
+                min="1"
+              />
+              <span className="input-suffix">万円</span>
+            </div>
           </div>
           <div className="form-group">
-            <label className="form-label">年利 <span className="form-hint">（%）</span></label>
-            <input type="number" className="form-input" value={rate} onChange={(e) => setRate(e.target.value)} min="0" step="0.01" />
+            <label className="form-label">年利</label>
+            <div className="input-wrapper">
+              <input
+                type="number"
+                className="form-input"
+                value={rate}
+                onChange={(e) => setRate(e.target.value)}
+                min="0"
+                step="0.01"
+              />
+              <span className="input-suffix">%</span>
+            </div>
           </div>
         </div>
 
         <div className="form-row">
           <div className="form-group">
-            <label className="form-label">返済期間 <span className="form-hint">（年）</span></label>
-            <input type="number" className="form-input" value={years} onChange={(e) => setYears(e.target.value)} min="1" max="50" />
+            <label className="form-label">返済期間</label>
+            <div className="input-wrapper">
+              <input
+                type="number"
+                className="form-input"
+                value={years}
+                onChange={(e) => setYears(e.target.value)}
+                min="1"
+                max="50"
+              />
+              <span className="input-suffix">年</span>
+            </div>
           </div>
           <div className="form-group">
             <label className="form-label">返済方式</label>
             <div className="form-radio-group">
               <label className="form-radio-label">
-                <input type="radio" name="method" checked={method === 'equal_payment'} onChange={() => setMethod('equal_payment')} />
+                <input
+                  type="radio"
+                  name="method"
+                  checked={method === 'equal_payment'}
+                  onChange={() => setMethod('equal_payment')}
+                />
                 元利均等
               </label>
               <label className="form-radio-label">
-                <input type="radio" name="method" checked={method === 'equal_principal'} onChange={() => setMethod('equal_principal')} />
+                <input
+                  type="radio"
+                  name="method"
+                  checked={method === 'equal_principal'}
+                  onChange={() => setMethod('equal_principal')}
+                />
                 元金均等
               </label>
             </div>
           </div>
         </div>
 
-        <div style={{ marginBottom: '1rem' }}>
-          <label className="form-label" style={{ marginBottom: '0.5rem' }}>繰上返済の設定</label>
-          {prepayments.map((pp, i) => (
-            <div key={pp.id} className="form-row" style={{ marginBottom: '0.5rem', alignItems: 'end' }}>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                {i === 0 && <label className="form-label form-hint">何年後</label>}
-                <input type="number" className="form-input" value={pp.year} onChange={(e) => updatePrepayment(pp.id, 'year', e.target.value)} min="1" placeholder="年" />
-              </div>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                {i === 0 && <label className="form-label form-hint">金額（万円）</label>}
-                <input type="number" className="form-input" value={pp.amount} onChange={(e) => updatePrepayment(pp.id, 'amount', e.target.value)} min="1" placeholder="万円" />
-              </div>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                {i === 0 && <label className="form-label form-hint">種類</label>}
-                <select className="form-input" value={pp.type} onChange={(e) => updatePrepayment(pp.id, 'type', e.target.value as PrepaymentType)}>
-                  <option value="shorten_period">期間短縮型</option>
-                  <option value="reduce_payment">返済額軽減型</option>
-                </select>
-              </div>
-              <div style={{ marginBottom: 0 }}>
-                <button type="button" className="btn" style={{ padding: '0.5rem', background: 'var(--color-danger-light)', color: 'var(--color-danger)' }} onClick={() => removePrepayment(pp.id)}>
-                  削除
-                </button>
+        <p className="form-section-label" style={{ marginTop: '0.5rem' }}>繰上返済の設定</p>
+
+        {prepayments.map((pp, i) => (
+          <div key={pp.id} className="prepayment-row">
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              {i === 0 && <label className="form-label">何年後</label>}
+              <div className="input-wrapper">
+                <input
+                  type="number"
+                  className="form-input"
+                  value={pp.year}
+                  onChange={(e) => updatePrepayment(pp.id, 'year', e.target.value)}
+                  min="1"
+                  placeholder="例：3"
+                />
+                <span className="input-suffix">年後</span>
               </div>
             </div>
-          ))}
-          <button type="button" className="btn" style={{ marginTop: '0.5rem', background: 'var(--color-primary-light)', color: 'var(--color-primary)' }} onClick={addPrepayment}>
-            + 繰上返済を追加
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              {i === 0 && <label className="form-label">金額</label>}
+              <div className="input-wrapper">
+                <input
+                  type="number"
+                  className="form-input"
+                  value={pp.amount}
+                  onChange={(e) => updatePrepayment(pp.id, 'amount', e.target.value)}
+                  min="1"
+                  placeholder="例：100"
+                />
+                <span className="input-suffix">万円</span>
+              </div>
+            </div>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              {i === 0 && <label className="form-label">種類</label>}
+              <select
+                className="form-input"
+                value={pp.type}
+                onChange={(e) =>
+                  updatePrepayment(pp.id, 'type', e.target.value as PrepaymentType)
+                }
+              >
+                <option value="shorten_period">期間短縮型</option>
+                <option value="reduce_payment">返済額軽減型</option>
+              </select>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-end', paddingBottom: i === 0 ? '0' : '0' }}>
+              {i === 0 && <div className="form-label" style={{ visibility: 'hidden' }}>削除</div>}
+              <button
+                type="button"
+                className="btn btn-danger-soft"
+                onClick={() => removePrepayment(pp.id)}
+              >
+                削除
+              </button>
+            </div>
+          </div>
+        ))}
+
+        <button
+          type="button"
+          className="btn btn-soft"
+          style={{ marginTop: '0.5rem', marginBottom: '0.25rem' }}
+          onClick={addPrepayment}
+        >
+          + 繰上返済を追加
+        </button>
+
+        <FormError message={error} />
+
+        <div className="form-submit-area">
+          <button type="submit" className="btn btn-primary btn-block">
+            計算する
           </button>
         </div>
-
-        <button type="submit" className="btn btn-primary btn-block">計算する</button>
       </form>
 
       {result && (
         <div>
-          <div className="result-grid">
-            <ResultHighlight
-              label="削減できる利息"
-              value={formatMan(result.savedInterest)}
-              unit="万円"
-              variant="accent"
-            />
-            <ResultHighlight
-              label="短縮される期間"
-              value={formatMonths(result.withoutPrepayment.actualMonths - result.result.actualMonths)}
-            />
+          <div className="result-banner">
+            <div className="result-banner-item">
+              <div className="banner-label">削減できる利息</div>
+              <div className="banner-value">
+                {formatMan(result.savedInterest)}
+                <span className="banner-unit">万円</span>
+              </div>
+            </div>
+            <div className="result-banner-divider" />
+            <div className="result-banner-item">
+              <div className="banner-label">短縮される期間</div>
+              <div className="banner-value">
+                {formatMonths(result.withoutPrepayment.actualMonths - result.result.actualMonths)}
+              </div>
+            </div>
           </div>
 
           <div className="result-grid">
@@ -204,9 +298,30 @@ export function KuriageMultiPage() {
           </div>
 
           <div className="card section-gap">
-            <ScheduleTable schedule={result.withoutPrepayment.schedule} label="繰上返済なし・返済スケジュール" />
-            <ScheduleTable schedule={result.result.schedule} label="繰上返済あり・返済スケジュール" />
+            <ScheduleTable
+              schedule={result.withoutPrepayment.schedule}
+              label="繰上返済なし・返済スケジュール"
+            />
+            <ScheduleTable
+              schedule={result.result.schedule}
+              label="繰上返済あり・返済スケジュール"
+            />
           </div>
+
+          <RelatedTools
+            tools={[
+              {
+                to: '/kuriage',
+                label: '繰上返済シミュレーター',
+                description: 'まずは1回の繰上返済で効果を確認したい方に',
+              },
+              {
+                to: '/karikae',
+                label: '借り換えシミュレーター',
+                description: '借り換えとの比較も検討してみませんか？',
+              },
+            ]}
+          />
         </div>
       )}
     </>

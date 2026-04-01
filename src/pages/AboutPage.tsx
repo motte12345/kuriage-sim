@@ -8,12 +8,14 @@ export function AboutPage() {
         description="繰上返済シミュレーターの概要と免責事項。対応ローン種類や計算の前提条件について。"
         path="/about"
       />
-      <h1 className="section-title">概要・免責事項</h1>
 
-      <div className="card" style={{ marginBottom: '1.5rem' }}>
-        <h2 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.75rem' }}>
-          このサイトについて
-        </h2>
+      <h1 className="page-title">概要・免責事項</h1>
+      <p className="page-description">
+        本ツールのご利用前に、以下の内容をご確認ください。
+      </p>
+
+      <div className="card" style={{ marginBottom: '1.25rem' }}>
+        <h2 className="section-title">このサイトについて</h2>
         <p>
           繰上返済シミュレーターは、住宅ローンや各種ローンの繰上返済による利息削減効果を
           具体的な数字で確認するためのツールです。期間短縮型と返済額軽減型を並べて比較できるほか、
@@ -21,11 +23,9 @@ export function AboutPage() {
         </p>
       </div>
 
-      <div className="card" style={{ marginBottom: '1.5rem' }}>
-        <h2 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.75rem' }}>
-          対応するローンの種類
-        </h2>
-        <ul style={{ paddingLeft: '1.25rem', lineHeight: 2 }}>
+      <div className="card" style={{ marginBottom: '1.25rem' }}>
+        <h2 className="section-title">対応するローンの種類</h2>
+        <ul style={{ paddingLeft: '1.25rem', lineHeight: 2.2, color: 'var(--color-text-secondary)' }}>
           <li>住宅ローン</li>
           <li>自動車ローン</li>
           <li>教育ローン・奨学金</li>
@@ -35,10 +35,8 @@ export function AboutPage() {
       </div>
 
       <div className="card">
-        <h2 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.75rem' }}>
-          免責事項
-        </h2>
-        <ul style={{ paddingLeft: '1.25rem', lineHeight: 2 }}>
+        <h2 className="section-title">免責事項</h2>
+        <ul style={{ paddingLeft: '1.25rem', lineHeight: 2.2, color: 'var(--color-text-secondary)' }}>
           <li>
             本ツールの計算結果は概算です。実際の返済額は金融機関の計算方法（端数処理、
             返済日の扱い等）により異なります。
