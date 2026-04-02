@@ -4,6 +4,7 @@ import { Seo } from '../components/Seo'
 import { FormError } from '../components/FormError'
 import { RelatedTools } from '../components/RelatedTools'
 import { HikakuSeoContent } from '../components/SeoContent'
+import { FudousanTanpoAffiliate } from '../components/AffiliateSection'
 import type { RepaymentMethod } from '../types/loan'
 import { simulateLoan } from '../calc/loan'
 import type { LoanSimulationResult } from '../types/loan'
@@ -291,6 +292,8 @@ export function HikakuPage() {
           />
         </div>
       )}
+
+      {result && <FudousanTanpoAffiliate />}
 
       <HikakuSeoContent />
     </>

@@ -1130,6 +1130,112 @@ select.form-input {
   background: #a00000;
 }
 
+/* Wide card (service CTA) */
+.affiliate-card-wide {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.affiliate-card-wide-body {
+  flex: 1;
+}
+
+.affiliate-card-badge {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background: var(--color-text-tertiary);
+  color: #fff;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.affiliate-features {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0;
+}
+
+.affiliate-features li {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  padding: 0.25rem 0;
+  padding-left: 1.25rem;
+  position: relative;
+}
+
+.affiliate-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.affiliate-card-note {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  margin-top: 0.5rem;
+}
+
+.affiliate-card-wide-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.affiliate-btn-cta {
+  background: linear-gradient(135deg, var(--color-accent) 0%, #10b981 100%);
+  color: #fff;
+  padding: 0.875rem 2rem;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(4, 120, 87, 0.3);
+  white-space: nowrap;
+}
+.affiliate-btn-cta:hover {
+  background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(4, 120, 87, 0.35);
+  text-decoration: none;
+}
+
+.affiliate-btn-sub {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+}
+
+.affiliate-section-highlight {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  border-color: #a7f3d0;
+}
+
+@media (max-width: 640px) {
+  .affiliate-card-wide {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .affiliate-features li {
+    text-align: left;
+  }
+
+  .affiliate-btn-cta {
+    width: 100%;
+  }
+}
+
 .affiliate-disclaimer {
   font-size: 0.75rem;
   color: var(--color-text-tertiary);
