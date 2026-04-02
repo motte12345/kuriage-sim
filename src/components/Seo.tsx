@@ -12,7 +12,7 @@ const BASE_URL = 'https://kuriage-sim.pages.dev'
 export function Seo({ title, description, path }: SeoProps) {
   const fullTitle = path === '/' ? `${SITE_NAME} | ローン返済計算ツール` : `${title} | ${SITE_NAME}`
   const url = `${BASE_URL}${path}`
-  const ogImage = `${BASE_URL}/og-image.svg`
+  const ogImage = `${BASE_URL}/og-image.png`
 
   return (
     <Helmet>

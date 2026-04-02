@@ -91,13 +91,13 @@ for (const route of routes) {
     `<meta property="og:url" content="${url}" />`,
     `<meta property="og:site_name" content="${SITE_NAME}" />`,
     `<meta property="og:locale" content="ja_JP" />`,
-    `<meta property="og:image" content="${BASE_URL}/og-image.svg" />`,
+    `<meta property="og:image" content="${BASE_URL}/og-image.png" />`,
     `<meta property="og:image:width" content="1200" />`,
     `<meta property="og:image:height" content="630" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${route.title}" />`,
     `<meta name="twitter:description" content="${route.description}" />`,
-    `<meta name="twitter:image" content="${BASE_URL}/og-image.svg" />`,
+    `<meta name="twitter:image" content="${BASE_URL}/og-image.png" />`,
   ].join('\n    ')
 
   if (!html.includes('og:title')) {
