@@ -89,6 +89,12 @@ export function Layout() {
         <p>
           本ツールの計算結果は概算です。実際の返済額は金融機関により異なります。
         </p>
+        <p style={{ marginTop: '0.5rem' }}>
+          関連ツール:{' '}
+          <a href="https://tedori-calc.pages.dev/" target="_blank" rel="noopener noreferrer">
+            パート・アルバイト手取り計算
+          </a>
+        </p>
         <p style={{ marginTop: '0.25rem' }}>
           &copy; {new Date().getFullYear()} 繰上返済シミュレーター
         </p>
