@@ -7,7 +7,7 @@ interface SeoProps {
 }
 
 const SITE_NAME = '繰上返済シミュレーター'
-const BASE_URL = 'https://kuriage-sim.pages.dev'
+const BASE_URL = 'https://kuriage.simtool.dev'
 
 export function Seo({ title, description, path }: SeoProps) {
   const fullTitle = path === '/' ? `${SITE_NAME} | ローン返済計算ツール` : `${title} | ${SITE_NAME}`

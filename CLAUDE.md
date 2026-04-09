@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ローン繰上返済シミュレーター。繰上返済による利息削減額・期間短縮を可視化する静的Webサイト。
 収益モデル: AdSense + Amazon/楽天アフィリエイト + A8.net（不動産担保ローン等）
 
-- 本番URL: https://kuriage-sim.pages.dev/
+- 本番URL: https://kuriage.simtool.dev/
 - リポジトリ: https://github.com/motte12345/kuriage-sim
 
 ## コマンド

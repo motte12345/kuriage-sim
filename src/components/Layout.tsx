@@ -91,7 +91,7 @@ export function Layout() {
         </p>
         <p style={{ marginTop: '0.5rem' }}>
           関連ツール:{' '}
-          <a href="https://tedori-calc.pages.dev/" target="_blank" rel="noopener noreferrer">
+          <a href="https://tedori.simtool.dev/" target="_blank" rel="noopener noreferrer">
             パート・アルバイト手取り計算
           </a>
         </p>

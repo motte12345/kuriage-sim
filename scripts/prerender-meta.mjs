@@ -13,7 +13,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const distDir = join(__dirname, '..', 'dist')
 
 const SITE_NAME = '繰上返済シミュレーター'
-const BASE_URL = 'https://kuriage-sim.pages.dev'
+const BASE_URL = 'https://kuriage.simtool.dev'
 
 /** @type {{ path: string, title: string, description: string }[]} */
 const routes = [
